@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Dark Web Report — Rise & Decline (2000–2025)</title>
+  <style>
+    :root{
+      --bg:#0b0f14; --card:#0f1720; --muted:#9aa5b1; --accent:#3dd3ff; --accent2:#ff7a59;
+      --danger:#ff4d4d;
+    }
+    body{font-family:Inter,system-ui,Segoe UI,Roboto,"Helvetica Neue",Arial;background:linear-gradient(180deg,#02040a 0%, #071021 100%);color:#e6eef6;margin:0;padding:24px;}
+    .container{max-width:1100px;margin:0 auto;}
+    header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;}
+    h1{font-size:20px;margin:0;color:var(--accent);}
+    .meta{color:var(--muted);font-size:13px;}
+    .grid{display:grid;grid-template-columns:1fr 360px;gap:20px;}
+    .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:18px;border-radius:12px;box-shadow:0 6px 18px rgba(2,6,15,0.6);border:1px solid rgba(255,255,255,0.03);}
+    .chart-wrap{height:360px;}
+    canvas{max-width:100%;}
+    .notice{background:#1a1f26;border-left:4px solid var(--danger);padding:12px;border-radius:8px;margin-bottom:12px;color:#ffdede;font-size:13px;}
+    .section-title{color:var(--accent2);font-weight:600;margin-bottom:8px;}
+    .small{font-size:13px;color:var(--muted);}
+    .sources{font-size:12px;color:var(--muted);margin-top:12px;}
+    pre{white-space:pre-wrap;font-size:13px;color:#cfeffb;background:transparent;margin:0;}
+    footer{margin-top:18px;color:var(--muted);font-size:12px;text-align:center;}
+    .redacted{background:linear-gradient(90deg,#2b2b2b,#111);padding:2px 6px;border-radius:4px;color:#ffb3b3;}
+    .btn {display:inline-block;background:var(--accent);color:#021; padding:8px 10px;border-radius:8px;font-weight:600;text-decoration:none;}
+    @media(max-width:900px){ .grid{grid-template-columns:1fr; } .chart-wrap{height:300px}}
+  </style>
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div>
+        <h1>Dark Web — Rise & Decline (2000–2025)</h1>
+        <div class="meta">Prepared by: Cyber-Crime Analyst (MSc Cybersecurity). Summary & interactive chart.</div>
+      </div>
+      <div><a class="btn" href="#" onclick="window.print();return false;">Print Report</a></div>
+    </header>
+
+    <div class="notice">
+      <strong>Safety notice:</strong> This report is informational. Do <em>not</em> visit or attempt to access darknet marketplaces or illegal content. Sensitive material redacted.
+    </div>
+
+    <div class="grid">
+      <main class="card">
+        <div class="section">
+          <div class="section-title">Executive Summary</div>
+          <p class="small">This report summarises the historical trajectory of dark web activity from early anonymity projects to the modern fragmented ecosystem. High-level findings: peak activity in mid-2010s, decline in centralized markets due to law enforcement and analytics, and continued adaptation by malicious actors.</p>
+        </div>
+
+        <hr style="border:none;border-top:1px solid rgba(255,255,255,0.03);margin:14px 0;">
+
+        <div class="section">
+          <div class="section-title">Key Findings</div>
+          <ul class="small">
+            <li>Tor and similar networks enabled both privacy-preserving use and criminal markets.</li>
+            <li>Major takedowns (e.g., Silk Road) reduced central marketplaces but led to fragmentation.</li>
+            <li>Cryptocurrency enabled transactions; chain analysis has reduced some anonymity.</li>
+            <li>Emerging trends: increased AI use, decentralized protocols, and encrypted messaging as alternative channels.</li>
+          </ul>
+        </div>
+
+        <hr style="border:none;border-top:1px solid rgba(255,255,255,0.03);margin:14px 0;">
+
+        <div class="section">
+          <div class="section-title">Mitigations & Advice</div>
+          <ol class="small">
+            <li>Use unique passwords and a password manager.</li>
+            <li>Enable strong 2FA (hardware token recommended).</li>
+            <li>Monitor accounts with breach services (haveibeenpwned) and enable dark web alerts.</li>
+            <li>Be cautious with KYC data; avoid oversharing personal identifiers publicly.</li>
+          </ol>
+        </div>
+
+        <hr style="border:none;border-top:1px solid rgba(255,255,255,0.03);margin:14px 0;">
+
+        <div class="section">
+          <div class="section-title">Original draft notes (redacted)</div>
+          <p class="small">The user draft included examples, statistics, and references. Sensitive and illegal content references were redacted from this public report. For evidence and original lines see the uploaded source (redacted). :contentReference[oaicite:20]{index=20}</p>
+        </div>
+
+        <div class="sources">
+          Sources: User uploaded draft and public open-source material (summarised). Original draft citation: uploaded file. :contentReference[oaicite:21]{index=21}
+        </div>
+      </main>
+
+      <aside class="card">
+        <div class="section-title">Interactive Chart</div>
+        <div class="chart-wrap">
+          <canvas id="trendChart"></canvas>
+        </div>
+        <div style="margin-top:12px;">
+          <div class="small"><strong>Notes:</strong> Data are conceptual estimates for visualization and educational use, not exact counts.</div>
+        </div>
+      </aside>
+    </div>
+
+    <footer>Report generated for educational & research purposes. Sensitive content redacted. </footer>
+  </div>
+
+<script>
+  (function(){
+    const ctx = document.getElementById('trendChart').getContext('2d');
+
+    const labels = ["2000","2002","2006","2011","2013","2015","2017","2019","2021","2023","2025"];
+    // Conceptual estimated user counts (for visualization only)
+    const data = [10000,25000,60000,400000,1000000,700000,900000,1200000,850000,650000,400000];
+
+    const gradient = ctx.createLinearGradient(0,0,0,400);
+    gradient.addColorStop(0, 'rgba(61,211,255,0.28)');
+    gradient.addColorStop(1, 'rgba(255,122,89,0.02)');
+
+    const config = {
+      type: 'line',
+      data: { labels: labels, datasets: [{
+        label: 'Estimated active users (conceptual)',
+        data: data,
+        fill: true,
+        backgroundColor: gradient,
+        borderColor: 'rgba(61,211,255,0.9)',
+        tension: 0.25,
+        pointRadius: 4,
+        pointHoverRadius:6
+      }]},
+      options: {
+        responsive:true,
+        plugins: {
+          legend:{display:true,labels:{color:'#cfeffb'}},
+          tooltip:{mode:'index',intersect:false}
+        },
+        scales: {
+          x: { ticks:{color:'#9aa5b1'}, grid:{color:'rgba(255,255,255,0.02)'} },
+          y: {
+            ticks:{color:'#9aa5b1',callback: value => { if(value>=1000000) return (value/1000000)+'M'; if(value>=1000) return (value/1000)+'k'; return value;}},
+            grid:{color:'rgba(255,255,255,0.02)'}
+          }
+        }
+      }
+    };
+
+    new Chart(ctx, config);
+  })();
+</script>
+</body>
+</html>
